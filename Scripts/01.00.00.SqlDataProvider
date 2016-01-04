@@ -1,0 +1,62 @@
+﻿/************************************************************/
+/*****              SqlDataProvider                     *****/
+/*****                                                  *****/
+/*****                                                  *****/
+/***** Note: To manually execute this script you must   *****/
+/*****       perform a search and replace operation     *****/
+/*****       for {databaseOwner} and {objectQualifier}  *****/
+/*****                                                  *****/
+/************************************************************/
+
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}{objectQualifier}DNNuclear_LogAnalyzer_LogItem') AND type in (N'U'))
+	DROP TABLE {databaseOwner}{objectQualifier}DNNuclear_LogAnalyzer_LogItem
+GO
+
+
+CREATE TABLE {databaseOwner}{objectQualifier}DNNuclear_LogAnalyzer_LogItem(
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ModuleId] [int] NOT NULL,
+	[Path] [nvarchar](255) NOT NULL,
+	[TimeStamp] [datetime] NULL,
+	[Count] [int] NOT NULL,
+	[Logger] [nvarchar](255) NULL,
+	[Thread] [nvarchar](50) NOT NULL,
+	[File] [nvarchar](255) NOT NULL,
+	[Message] [nvarchar](max) NULL,
+	[MachineName] [nvarchar](255) NOT NULL,
+	[Throwable] [nvarchar](255) NULL,
+	[Class] [nvarchar](255) NULL,
+	[Level] [nvarchar](10) NULL,
+	CONSTRAINT [PK_DNNuclear_LogAnalyzer_LogItem] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)
+)
+GO
+
+
+CREATE PROCEDURE {databaseOwner}{objectQualifier}DNNuclear_LogAnalyzer_RollupLogs
+(
+	@ModuleID int
+)
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT [Message],[Throwable],[Class],[Level],SUM([Count]) AS [Count]
+	FROM DNNuclear_LogAnalyzer_LogItem
+	WHERE [ModuleId] = @ModuleId
+	GROUP BY [Message],[Throwable],[Class],[Level]
+	ORDER BY
+		CASE WHEN [Level] = 'FATAL' THEN 5 END DESC,
+		CASE WHEN [Level] = 'ERROR' THEN 4 END DESC,
+		CASE WHEN [Level] = 'WARN' THEN 3 END DESC,
+		CASE WHEN [Level] = 'INFO' THEN 2 END DESC,
+		CASE WHEN [Level] = 'DEBUG' THEN 1 END DESC,
+		SUM([Count]) DESC
+END
+GO
+
+/************************************************************/
+/*****              SqlDataProvider                     *****/
+/************************************************************/

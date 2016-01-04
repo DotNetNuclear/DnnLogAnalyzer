@@ -1,0 +1,94 @@
+<dotnetnuke type="Package" version="5.0">
+  <packages>
+    <package name="LogAnalyzer" type="Module" version="01.00.00">
+      <friendlyName>Log Analyzer</friendlyName>
+      <description>Module that can scan the DNN log4net logs and provide insight to recurring errors.</description>
+      <iconFile>DesktopModules/MVC/DotNetNuclear/LogAnalyzer/Resources/img/extension.png</iconFile>
+      <owner>
+        <name>DotNetNuclear</name>
+        <organization>DotNetNuclear LLC</organization>
+        <url>http://www.dotnetnuclear.com</url>
+        <email>support@dotnetnuclear.com</email>
+      </owner>
+      <license src="license.txt" />
+      <releaseNotes src="releaseNotes.txt" /> 
+      <azureCompatible>true</azureCompatible>
+      <components>
+        <component type="Script">
+          <scripts>
+            <basePath>DesktopModules\MVC\DotNetNuclear\LogAnalyzer</basePath>
+            <script type="Install">
+              <path>Scripts</path>
+              <name>01.00.00.SqlDataProvider</name>
+              <version>01.00.00</version>
+            </script>
+            <script type="UnInstall">
+              <path>Scripts</path>
+              <name>Uninstall.SqlDataProvider</name>
+              <version>00.00.01</version>
+            </script>
+          </scripts>
+        </component>
+        <component type="Module">
+          <desktopModule>
+            <moduleName>DotNetNuclear.LogAnalyzer</moduleName>
+            <foldername>DotNetNuclear/LogAnalyzer</foldername>
+            <shareable>Supported</shareable>
+            <businessControllerClass>DotNetNuclear.Modules.LogAnalyzer.Components.FeatureController, DotNetNuclear.LogAnalyzer</businessControllerClass>
+            <supportedFeatures>
+              <supportedFeature type="Upgradeable" />
+            </supportedFeatures>
+            <moduleDefinitions>
+              <moduleDefinition>
+                <definitionName>DotNetNuclear.LogAnalyzer</definitionName>
+                <friendlyName>LogAnalyzer</friendlyName>
+                <defaultCacheTime>0</defaultCacheTime>
+                <moduleControls>
+                  <moduleControl>
+                    <controlKey />
+                    <controlSrc>DotNetNuclear.Modules.LogAnalyzer.Controllers/Log/Index.mvc</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle />
+                    <controlType>View</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>False</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>QuickSettings</controlKey>
+                    <controlSrc>DotNetNuclear.Modules.LogAnalyzer.Controllers/Settings/Index.mvc</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle />
+                    <controlType>View</controlType>
+                    <iconFile />
+                    <helpUrl/>
+                    <supportsPopUps>False</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                </moduleControls>
+              </moduleDefinition>
+            </moduleDefinitions>
+          </desktopModule>
+          <eventMessage>
+            <processorType>DotNetNuke.Entities.Modules.EventMessageProcessor, DotNetNuke</processorType>
+            <processorCommand>UpgradeModule</processorCommand>
+            <attributes>
+              <businessControllerClass>DotNetNuclear.Modules.LogAnalyzer.Components.FeatureController</businessControllerClass>
+              <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
+              <upgradeVersionsList>01.00.00</upgradeVersionsList>
+            </attributes>
+          </eventMessage>
+        </component>
+        <component type="ResourceFile">
+          <resourceFiles>
+            <basePath>DesktopModules/MVC/DotNetNuclear/LogAnalyzer</basePath>
+            <resourceFile>
+              <name>Resources.zip</name>
+            </resourceFile>
+          </resourceFiles>
+        </component>
+      </components>
+    </package>
+  </packages>
+</dotnetnuke>

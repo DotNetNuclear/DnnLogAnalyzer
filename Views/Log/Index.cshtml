@@ -1,0 +1,87 @@
+﻿@inherits DotNetNuke.Web.Mvc.Framework.DnnWebViewPage<DotNetNuclear.Modules.LogAnalyzer.Models.LogViewModel>
+
+@using DotNetNuke.Framework.JavaScriptLibraries
+@using DotNetNuke.Web.Mvc.Helpers
+@using DotNetNuclear.Modules.LogAnalyzer.Models
+
+
+@using DotNetNuke.Web.Client.ClientResourceManagement
+@{
+    var moduleId = Dnn.ModuleContext.ModuleId;
+
+    ClientResourceManager.RegisterStyleSheet(Dnn.DnnPage, "~/DesktopModules/MVC/DotNetNuclear/LogAnalyzer/Resources/css/bootstrap.min.css");
+    ClientResourceManager.RegisterStyleSheet(Dnn.DnnPage, "~/DesktopModules/MVC/DotNetNuclear/LogAnalyzer/Resources/css/module.css");
+
+    ClientResourceManager.RegisterScript(Dnn.DnnPage, "~/DesktopModules/MVC/DotNetNuclear/LogAnalyzer/Resources/js/jquery.signalR-2.2.0.min.js", 10);
+    ClientResourceManager.RegisterScript(Dnn.DnnPage, "~/signalr/hubs", 100);
+    ClientResourceManager.RegisterScript(Dnn.DnnPage, "~/DesktopModules/MVC/DotNetNuclear/LogAnalyzer/Resources/js/loganalyzer.js", 101);
+
+    JavaScript.RequestRegistration("Knockout");
+}
+
+<div id='dnnuclear-loganalyzer-@moduleId' class="dnnuclear-item">
+    @if (Model.FilesToAnalyze != null)
+    {
+    <div class="dnnFilterSet clearfix">
+        <h3>Select the log files to analyze</h3>
+        <select id="dnnuclear_fileSelector" name="dnnuclear$fileSelector" >
+            @foreach (FileInfo fi in Model.FilesToAnalyze)
+            {
+                <option value="@fi.FullName">@fi.Name (@fi.Length)</option>
+            }
+        </select>
+        <button id="btnAnalyze" class="btn btn-info btn-med disabled" title="@Dnn.LocalizeString("btnAnalyze")">
+            <span class="glyphicon glyphicon-play"></span>
+            @Dnn.LocalizeString("btnAnalyze")
+        </button>
+    </div>
+
+    <div id="logAnalyzerProgress" class="progress progress-striped active">
+        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+        </div>
+    </div>
+    @*<div id="logAnalyzerProgress"><div class="progress-label"></div></div>*@
+    }
+    @if (Model.ReportedItems != null && Model.ReportedItems.Count > 0)
+    {
+        <div class="dnnFilterSet clearfix">
+            <h3>Results</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Level</td>
+                        <td>Class</td>
+                        <td>Exception</td>
+                        <td>Message</td>
+                        <td>Occurences</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (LogItemCore li in Model.ReportedItems)
+                    {
+                        <tr>
+                            <td>@li.Level</td>
+                            <td>@li.Class</td>
+                            <td>@li.Throwable</td>
+                            <td>@li.Message</td>
+                            <td>@li.Count</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+
+    $("#btnAnalyze").click(function (e) {
+        // some actions here
+        e.preventDefault();
+        var trId = new Date().getTime();
+        var req = { "taskId" : trId.toString(), "files" : [] };
+        req.files.push($( "#dnnuclear_fileSelector option:selected" ).val());
+        dnnuclear.analyze("logsvc/analyze", @moduleId, req, null);
+    });
+
+</script>

@@ -1,0 +1,5 @@
+#logAnalyzerProgress {display: none;}
+#logAnalyzerProgress .progress-bar {
+    font-weight: normal;
+    text-shadow: 1px 1px 0 #333;
+}
