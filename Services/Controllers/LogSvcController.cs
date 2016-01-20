@@ -11,7 +11,7 @@ using DotNetNuclear.Modules.LogAnalyzer.Models;
 
 namespace DotNetNuclear.Modules.LogAnalyzer.Services.Controllers
 {
-    ///desktopmodules/dotnetnuclear.loganalyzer/api/logsvc/analyze
+    //[baseURL]=/desktopmodules/dotnetnuclear.loganalyzer/api
     public class LogSvcController : DnnApiController
     {
         public LogSvcController()
@@ -29,9 +29,10 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Services.Controllers
         public HttpResponseMessage Analyze(LogServiceRequest req)
         {
             string taskId = req.taskId;
+            string logPath = FileUtils.GetDnnLogPath() + "\\";
             var p = new LogAnalyzerHub();
             p.NotifyStart(taskId);
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
 
             LogViewModel vm = new LogViewModel();
             ILogItemRepository repo = new LogItemRepository();
@@ -43,7 +44,7 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Services.Controllers
             repo.DeleteAllItems(ActiveModule.ModuleID);
             foreach (string logFile in req.files)
             {
-                totalLogLines += LogFileParser.GetLineCount(logFile);
+                totalLogLines += LogFileParser.GetLineCount(logPath + logFile);
             }
             lineIncrement = Convert.ToInt64(totalLogLines / 100);
 
@@ -53,7 +54,7 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Services.Controllers
 
             foreach (string logFile in req.files)
             {
-                var logItems = analyzer.GetEntries(logFile, logFilter);
+                var logItems = analyzer.GetEntries(logPath + logFile, "log4net", String.Empty);
                 foreach (var li in logItems)
                 {
                     li.ModuleId = ActiveModule.ModuleID;

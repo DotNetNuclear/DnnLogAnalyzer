@@ -19,7 +19,7 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Models
 {
     public class LogViewModel
     {
-        public List<System.IO.FileInfo> FilesToAnalyze { get; set; }
+        public List<FileListItem> FilesToAnalyze { get; set; }
         public List<LogItemCore> ReportedItems { get; set; }
     }
 }

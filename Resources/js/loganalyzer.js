@@ -1,87 +1,112 @@
 ﻿var dnnuclear = dnnuclear || {};
 
 (function (dnnuclear) {
-    dnnuclear.laHub = $.connection.logAnalyzerHub;
-
-    dnnuclear.laHub.state.moduleid = 0;
-    dnnuclear.laHub.state.userid = -1;
-    dnnuclear.connectionId = -1;
-
-    $(document).ready(function () {
-        dnnuclear.progress = $("#logAnalyzerProgress");
-    });
-
-    dnnuclear.updateProgress = function (val) {
-        var progBar = dnnuclear.progress.find(".progress-bar");
-        if (val >= 0) {
-            progBar.css('width', val + '%').attr('aria-valuenow', val).text(val + '%');
+    /*
+    *  Log Analyzer SignalR hub definition
+    */
+    dnnuclear.LogAnalyzerHub = $.connection.logAnalyzerHub;
+    dnnuclear.LogAnalyzerHub.client = {
+        progress: function (procId, i) {
+            dnnuclear.LogAnalyzer.updateProgress(i);
+        },
+        procStart: function (procId, id) {
+            dnnuclear.LogAnalyzer.updateProgress(0);
+            dnnuclear.LogAnalyzer.progressBar.show();
+            console.log(id);
+        },
+        procComplete: function (procId) {
+            dnnuclear.LogAnalyzer.updateProgress(100);
+            setTimeout(function () {
+                //dnnuclear.LogAnalyzer.updateProgress(0);
+                dnnuclear.LogAnalyzer.progressBar.hide();
+            }, 2000);
         }
-    }
-
-    dnnuclear.analyze = function (method, moduleId, jsonIn, callback) {
-        var SF = $.ServicesFramework(moduleId);
-        var serviceBase = SF.getServiceRoot("dotnetnuclear.loganalyzer");
-        jQuery.ajax({
-            type: "POST",
-            url: serviceBase + method,
-            beforeSend: SF.setModuleHeaders,
-            data: jsonIn,
-            dataType: "json"
-        }).done(function (response) {
-            if (callback) { callback(response); }
-        }).fail(function (xhr, result, error) {
-            console.log("error: " + error);
-        });
     };
 
-    dnnuclear.laHub.client.progress = function (procId, i) {
-        dnnuclear.updateProgress(i);
+    /*
+    *  Log Analyzer options definition & defaults
+    */
+    dnnuclear.LogAnalyzerDefOptions = {
+        moduleId: -1,
+        koContainer: $(".dnnuclear-logAnalyzer:first"),
+        progressBarSelector: "#logAnalyzerProgress",
+        logFileList: []
     };
 
-    dnnuclear.laHub.client.procStart = function (procId, id) {
-        dnnuclear.updateProgress(-1);
-        dnnuclear.progress.show();
-        console.log(id);
+    /*
+    *  Log Analyzer Controller
+    */
+    dnnuclear.LogAnalyzer = {
+        hubInitialized: false,
+        hub: dnnuclear.LogAnalyzerHub,
+        connectionId: -1,
+        progressBar: null,
+        options: null,
+        serviceFW: null,
+        serviceRoot: null,
+
+        init: function (options) {
+            this.options = $.extend(dnnuclear.LogAnalyzerDefOptions, options);
+
+            this.serviceFW = $.ServicesFramework(this.options.moduleId);
+            this.serviceRoot = this.serviceFW.getServiceRoot("dotnetnuclear.loganalyzer");
+            this.progressBar = $(this.options.progressBarSelector);
+
+            this.hub.state.moduleid = this.options.moduleId;
+            this.hub.state.userid = -1;
+            dnnuclear.LaRequestViewModel.logFiles = this.options.logFileList;
+
+            ko.applyBindings(dnnuclear.LaRequestViewModel, $(this.options.koContainer).get(0));
+
+            $.connection.hub.start().done(function () {
+                dnnuclear.LogAnalyzer.hub.connectionId = $.connection.hub.id;
+                dnnuclear.LogAnalyzer.hubInitialized = true;
+            });
+        },
+        updateProgress: function(val) {
+            var progBar = this.progressBar.find(".progress-bar");
+            if (val >= 0) {
+                progBar.css('width', val + '%').attr('aria-valuenow', val).text(val + '%');
+            }
+        },
+        analyzeLogs: function () {
+            var req = {
+                "taskId": new Date().getTime().toString(),
+                "files": dnnuclear.LaRequestViewModel.selectedLogs()
+            };
+            jQuery.ajax({
+                type: "POST",
+                url: this.serviceRoot + "logsvc/analyze",
+                beforeSend: this.serviceFW.setModuleHeaders,
+                data: req,
+                dataType: "json"
+            }).done(function (response) {
+                dnnuclear.LogAnalyzer.displayReport(response);
+            }).fail(function (xhr, result, error) {
+                console.log("error: " + error);
+            });
+        },
+        displayReport: function (data) {
+            alert('show report');
+        }
     };
 
-    dnnuclear.laHub.client.procComplete = function (procId) {
-        dnnuclear.updateProgress(100);
-        setTimeout(function () {
-            dnnuclear.progress.hide();
-        }, 2000);
+    /*
+    *  Knockout view models
+    */
+    dnnuclear.LaRequestViewModel = {
+        logFiles: [],
+        selectedLogs: ko.observableArray(),
+        formatLogName: function(logFile) {
+            return logFile.Name + " (" + logFile.FileSize + ")";
+        },
+        startAnalyzer: function () {
+            dnnuclear.LogAnalyzer.analyzeLogs();
+        }
     };
 
-    //dnnuclear.TaskHub.cancelDone = function (procId) {
-    //    var $tr = $('#' + procId);
-    //    $tr.find('td:nth-child(2)').find('div.progress').removeClass('active');
-    //    $tr.find('td:nth-child(3)').text('Canceled');
-    //    $tr.find('td:last').html('');
-    //};
+    dnnuclear.LaResultsViewModel = {
+        Results: ko.observableArray()
+    };
 
-    //$('#btnRun').bind('click', function (e) {
-    //    e.preventDefault();
-
-    //    var $option = $('#createTask').find('option:selected');
-    //    var value = parseInt($option.val(), 10);
-    //    if (!isNaN(value)) {
-    //        var trId = new Date().getTime();
-    //        //Create Tr
-    //        var $tr = $('<tr id="' + trId + '"><td>' + $option.text() + '</td><td><p>0%</p><div class="progress progress-striped active"><div class="bar" style="width: 0%;"></div></div></td><td>Running...</td><td><button class="btn btn-danger">Stop</button></td></tr>');
-    //        $tr.appendTo('#tblTasks>tbody');
-
-    //        taskHub.doLongProc(trId, $option.text());
-    //    }
-    //});
-
-    //$('#tblTasks').on('click', 'button', function (e) {
-    //    e.preventDefault();
-    //    taskHub.cancelProc($(this).parent().parent().attr('id'));
-    //});
-
-    $.connection.hub.start().done(function () {
-        dnnuclear.connectionId = $.connection.hub.id;
-        $("#btnAnalyze").removeClass("disabled");
-    });
-
-//    //$.connection.hub.start();
 }(dnnuclear));

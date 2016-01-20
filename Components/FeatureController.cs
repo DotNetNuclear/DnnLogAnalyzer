@@ -12,6 +12,7 @@
 */
 using DotNetNuke.Entities.Controllers;
 using DotNetNuke.Entities.Modules;
+using System;
 
 namespace DotNetNuclear.Modules.LogAnalyzer.Components
 {
@@ -69,8 +70,5 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
 
             return newAUMExp;
         }
-
-
     }
-
 }

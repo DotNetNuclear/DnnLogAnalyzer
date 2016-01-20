@@ -25,7 +25,6 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
         private IAnalyzerNotifyer _progress;
         private const string Separator = "[---]";
         private const string FileParserRegex = @"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}),(\d{3})(\s)\[(.*?)\]\[(.*?)\]\[(.*?)\](\s)(.*?)\-(\s+)(.*)";
-        private const string DateTimeFormat = "yyyy-MM-dd HH:mm:ss,fff";
 
         public LogFileParser(IAnalyzerNotifyer notifyer)
         {
@@ -38,16 +37,13 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
         /// <param name="dataSource"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IEnumerable<LogItem> GetEntries(string dataSource, FilterParams filter)
+        public IEnumerable<LogItem> GetEntries(string dataSource, string loggerName, string logPattern)
         {
             if (String.IsNullOrEmpty(dataSource))
                 throw new ArgumentNullException("dataSource");
-            if (filter == null)
-                throw new ArgumentNullException("filter");
 
-            string pattern = filter.Pattern;
-            if (String.IsNullOrEmpty(pattern))
-                throw new NotValidValueException("filter pattern null");
+            if (String.IsNullOrEmpty(logPattern))
+                logPattern = FileParserRegex;
 
             FileInfo file = new FileInfo(dataSource);
             if (!file.Exists)
@@ -70,13 +66,13 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
                 {
                     lineCounter++;
                     string message;
-                    Regex matchLineRegEx = new Regex(FileParserRegex);
+                    Regex matchLineRegEx = new Regex(logPattern);
                     Match m = matchLineRegEx.Match(line);
                     if (m.Success)
                     {
                         if (entry.Id > 0)
                         {
-                            entry.Logger = filter.Logger;
+                            entry.Logger = loggerName;
                             entry.File = file.Name;
                             entry.Message = msg.ToString();
                             result.Add(entry);
@@ -126,7 +122,7 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
                     }
                     if (_progress != null) { _progress.UpdateProgress(lineCounter); }
                 }
-                entry.Logger = filter.Logger;
+                entry.Logger = loggerName;
                 entry.File = file.Name;
                 entry.Message = msg.ToString();
                 result.Add(entry);

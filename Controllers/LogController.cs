@@ -41,10 +41,10 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Controllers
         public ActionResult Index()
         {
             LogViewModel vm = new LogViewModel();
-            vm.FilesToAnalyze = new List<System.IO.FileInfo>();
+            vm.FilesToAnalyze = new List<FileListItem>();
             try
             {
-                string logPath = ControllerContext.HttpContext.Server.MapPath("~/portals/_default/Logs");
+                string logPath = FileUtils.GetDnnLogPath();
                 string[] logFileList = System.IO.Directory.GetFiles(logPath);
                 Array.Sort(logFileList, StringComparer.InvariantCulture);
                 foreach (string s in logFileList.Reverse())
@@ -52,7 +52,10 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Controllers
                     System.IO.FileInfo f = new System.IO.FileInfo(s);
                     if (f.FullName.EndsWith(".log.resources"))
                     {
-                        vm.FilesToAnalyze.Add(f);
+                        vm.FilesToAnalyze.Add(new FileListItem {
+                            FileSize = FileUtils.FormatFileSize((double)f.Length),
+                            Name = f.Name
+                        });
                     }
                 }
             }
