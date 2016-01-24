@@ -53,7 +53,6 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
 
             using (StreamReader reader = file.OpenText())
             {
-                long lineCounter = 0;
                 string line;
                 int logNum = 0;
                 int classColonIdx;
@@ -64,7 +63,7 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
 
                 while ((line = reader.ReadLine()) != null)
                 {
-                    lineCounter++;
+                    _progress.IncrementCurrentProgress();
                     string message;
                     Regex matchLineRegEx = new Regex(logPattern);
                     Match m = matchLineRegEx.Match(line);
@@ -120,7 +119,7 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
                             }
                         }
                     }
-                    if (_progress != null) { _progress.UpdateProgress(lineCounter); }
+                    if (_progress != null) { _progress.UpdateProgress(); }
                 }
                 entry.Logger = loggerName;
                 entry.File = file.Name;

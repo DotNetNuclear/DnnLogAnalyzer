@@ -1,15 +1,26 @@
-#logAnalyzerProgress {display: none;}
+#logAnalyzerProgress {display: none; margin-top: 18px;}
 #logAnalyzerProgress .progress-bar { font-weight: normal; text-shadow: 1px 1px 0 #333; }
-table.table-loglist { max-width: 600px; border: 2px #ddd solid; }
+table.table-loglist { width: 100%; max-width: 600px; border: 2px #ddd solid; border-collapse:collapse; }
 table.table-loglist>tbody tr td:first-child,
     table.table-loglist>thead tr th:first-child { border-right: 2px #ddd solid; text-align:center;   }
 table.table-fixedheader, table.table-fixedheader>thead, table.table-fixedheader>tbody, table.table-fixedheader>thead>tr, table.table-fixedheader>tbody>tr, table.table-fixedheader>thead>tr>th, table.table-fixedheader>tbody>td { display: block;}
 table.table-fixedheader>thead>tr:after, table.table-fixedheader>tbody>tr:after { content:' '; display: block; visibility: hidden; clear: both;}
-table.table-fixedheader>tbody { overflow-y: scroll; height: 160px; }
+table.table-fixedheader>tbody { overflow-y: scroll; height: 186px; }
 table.table-fixedheader>thead { overflow-y: scroll; }
 table.table-fixedheader>thead::-webkit-scrollbar { background-color: inherit; }
 table.table-fixedheader>thead>tr>th:after, table.table-fixedheader>tbody>tr>td:after { content:' '; display: table-cell; visibility: hidden; clear: both; }
 table.table-fixedheader>thead tr th, table.table-fixedheader>tbody tr td { float: left; word-wrap:break-word; }
-
-
-
+table.table-fixedheader>thead tr th { border-bottom: none; }
+table.table-fixedheader>tbody tr:first-child td { border-top: 2px #ddd solid; }
+table.table-fixedheader>tbody tr:hover { background: #faefbb; cursor: pointer; }
+table.table-fixedheader>tbody td input[type="checkbox"] { display:none; }
+table.table-fixedheader>tbody td input[type="checkbox"] + span { display:inline-block; width:19px; height:19px; margin:-1px 4px 0 0; vertical-align:middle; background:url(../img/checkbox_sp.png) left top no-repeat; cursor:pointer; }
+table.table-fixedheader>tbody td input[type="checkbox"]:checked + span { background:url(../img/checkbox_sp.png) -18px top no-repeat; }
+table.table-results {table-layout: fixed;}
+table.table-results tr td {word-wrap: break-word;}
+table.table-results tr.fatal td {background-color:rgba(191, 63, 63, .4); }
+table.table-results tr.error td {background-color:rgba(251, 32, 3, .4); }
+table.table-results tr.warn td {background-color:rgba(251, 170, 38, .4); }
+table.table-results tr.info td {background-color:rgba(205, 204, 202, .4); }
+table.table-results tr.debug td {background-color:rgba(255, 255, 255, .4); }
+table.table-results tr td.log-message span { word-break: break-all; }

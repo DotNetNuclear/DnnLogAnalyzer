@@ -10,6 +10,7 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
         long ProgressTotalCount { get; set; }
         long ProgressIncrement { get; set; }
         string CurrentHubTaskId { get; set; }
-        void UpdateProgress(long currentProgress);
+        void UpdateProgress();
+        void IncrementCurrentProgress();
     }
 }

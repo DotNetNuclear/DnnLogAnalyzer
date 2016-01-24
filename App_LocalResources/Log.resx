@@ -120,4 +120,7 @@
   <data name="btnAnalyze.Text" xml:space="preserve">
     <value>Analyze</value>
   </data>
+  <data name="btnReset.Text" xml:space="preserve">
+    <value>Start a New Analyze</value>
+  </data>
 </root>

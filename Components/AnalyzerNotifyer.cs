@@ -10,6 +10,7 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
     public class AnalyzerNotifyer : IAnalyzerNotifyer
     {
         private object _progressLOCK;
+        private long _progressCurrent { get; set; }
         private int _currentPct = 0;
         private ILogAnalyzerHub _LogSignalRHub { get; set; }
         public long ProgressTotalCount { get; set; }
@@ -23,22 +24,28 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
             ProgressIncrement = increment;
             CurrentHubTaskId = taskId;
             _LogSignalRHub = hub;
+            _progressCurrent = 0;
         }
 
-        public void UpdateProgress(long currentProgress)
+        public void UpdateProgress()
         {
             lock(_progressLOCK)
             {
-                int pi = Convert.ToInt32(currentProgress / ProgressIncrement);
+                int pi = Convert.ToInt32(_progressCurrent / ProgressIncrement);
                 pi = (pi >= 99 ? 99 : pi);
 
                 if (_currentPct != pi)
                 {
                     _LogSignalRHub.NotifyProgress(CurrentHubTaskId, pi);
                     _currentPct = pi;
-                    Thread.Sleep(50);  //Sleep for .05 sec in order for progress to display
+                    Thread.Sleep(25);  //Sleep for .025 sec in order for progress to display
                 }
             }
+        }
+
+        public void IncrementCurrentProgress()
+        {
+            _progressCurrent++;
         }
     }
 }

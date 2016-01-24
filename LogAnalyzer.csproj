@@ -85,9 +85,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\img\checkbox_sp.png" />
     <Content Include="Resources\img\extension.png" />
     <Content Include="Resources\js\bootstrap.min.js" />
     <Content Include="Resources\js\loganalyzer.js" />
+    <Content Include="Resources\js\readmore.min.js" />
     <Content Include="Scripts\01.00.00.SqlDataProvider" />
     <Content Include="Resources\js\jquery.signalR-2.2.0.js" />
     <Content Include="Resources\js\jquery.signalR-2.2.0.min.js" />

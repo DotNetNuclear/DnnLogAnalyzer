@@ -17,9 +17,8 @@
         procComplete: function (procId) {
             dnnuclear.LogAnalyzer.updateProgress(100);
             setTimeout(function () {
-                //dnnuclear.LogAnalyzer.updateProgress(0);
                 dnnuclear.LogAnalyzer.progressBar.hide();
-            }, 2000);
+            }, 1000);
         }
     };
 
@@ -54,9 +53,9 @@
 
             this.hub.state.moduleid = this.options.moduleId;
             this.hub.state.userid = -1;
-            dnnuclear.LaRequestViewModel.logFiles = this.options.logFileList;
+            dnnuclear.LogAnalyzerViewModel.logFiles = this.options.logFileList;
 
-            ko.applyBindings(dnnuclear.LaRequestViewModel, $(this.options.koContainer).get(0));
+            ko.applyBindings(dnnuclear.LogAnalyzerViewModel, $(this.options.koContainer).get(0));
 
             $.connection.hub.start().done(function () {
                 dnnuclear.LogAnalyzer.hub.connectionId = $.connection.hub.id;
@@ -72,7 +71,7 @@
         analyzeLogs: function () {
             var req = {
                 "taskId": new Date().getTime().toString(),
-                "files": dnnuclear.LaRequestViewModel.selectedLogs()
+                "files": dnnuclear.LogAnalyzerViewModel.selectedLogs()
             };
             jQuery.ajax({
                 type: "POST",
@@ -81,32 +80,50 @@
                 data: req,
                 dataType: "json"
             }).done(function (response) {
-                dnnuclear.LogAnalyzer.displayReport(response);
+                if (response && response.ReportedItems) {
+                    dnnuclear.LogAnalyzer.displayReport(response.ReportedItems);
+                }
             }).fail(function (xhr, result, error) {
                 console.log("error: " + error);
             });
         },
         displayReport: function (data) {
-            alert('show report');
+            dnnuclear.LogAnalyzerViewModel.analyzedResults(data);
         }
     };
 
     /*
     *  Knockout view models
     */
-    dnnuclear.LaRequestViewModel = {
+    dnnuclear.LogAnalyzerViewModel = {
         logFiles: [],
+        analyzedResults: ko.observableArray(),
         selectedLogs: ko.observableArray(),
         formatLogName: function(logFile) {
             return logFile.Name + " (" + logFile.FileSize + ")";
         },
         startAnalyzer: function () {
             dnnuclear.LogAnalyzer.analyzeLogs();
+        },
+        resetAnalyzer: function () {
+            var self = dnnuclear.LogAnalyzerViewModel;
+            self.selectedLogs.removeAll();
+            self.analyzedResults.removeAll();
+        },
+        selectALog: function (item, event) {
+            var self = dnnuclear.LogAnalyzerViewModel;
+            if (self.selectedLogs.indexOf(item.Name) >= 0) {
+                self.selectedLogs.remove(item.Name);
+            } else {
+                self.selectedLogs.push(item.Name);
+            }
+        },
+        afterResultRender: function (elem) {
+            $(elem).find('td.log-message span').readmore({
+                speed: 125,
+                collapsedHeight: 80
+            });
         }
-    };
-
-    dnnuclear.LaResultsViewModel = {
-        Results: ko.observableArray()
     };
 
 }(dnnuclear));

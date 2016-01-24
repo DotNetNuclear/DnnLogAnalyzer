@@ -13,6 +13,7 @@
     ClientResourceManager.RegisterStyleSheet(Dnn.DnnPage, "~/DesktopModules/MVC/DotNetNuclear/LogAnalyzer/Resources/css/module.css");
 
     ClientResourceManager.RegisterScript(Dnn.DnnPage, "~/DesktopModules/MVC/DotNetNuclear/LogAnalyzer/Resources/js/jquery.signalR-2.2.0.min.js", 10);
+    ClientResourceManager.RegisterScript(Dnn.DnnPage, "~/DesktopModules/MVC/DotNetNuclear/LogAnalyzer/Resources/js/readmore.min.js", 99);
     ClientResourceManager.RegisterScript(Dnn.DnnPage, "~/signalr/hubs", 100);
     ClientResourceManager.RegisterScript(Dnn.DnnPage, "~/DesktopModules/MVC/DotNetNuclear/LogAnalyzer/Resources/js/loganalyzer.js", 101);
 
@@ -22,7 +23,7 @@
 <div id='dnnuclear-loganalyzer-@moduleId' class="dnnuclear-logAnalyzer">
     @if (Model.FilesToAnalyze != null)
     {
-    <div class="dnnFilterSet clearfix">
+    <div class="clearfix" data-bind="visible: analyzedResults().length == 0">
         <h3>Select the log files to analyze</h3>
         <table class="table table-responsive table-fixedheader table-loglist">
             <thead>
@@ -31,20 +32,17 @@
                     <th width="85%">Log File</th>
                 </tr>
             </thead>
-            <tbody data-bind="template: { name: 'logFileTmpl', foreach: logFiles, as: 'log' }">
+            <tbody data-bind="foreach: logFiles">
+                <tr data-bind="click: $parent.selectALog">
+                    <td width="15%">
+                        <input type="checkbox" class="checkbox-logfile" data-bind="attr: { value: Name }, checked: $parent.selectedLogs" /><span></span> 
+                    </td>
+                    <td width="85%">
+                        <span data-bind="text: $parent.formatLogName($data)"></span>
+                    </td>
+                </tr>
             </tbody>
         </table>
-
-        <script id="logFileTmpl" type="text/html">
-            <tr>
-                <td width="15%">
-                    <input type="checkbox" class="checkbox-logfile" data-bind="attr: { value: Name }, checked: $parent.selectedLogs" />
-                </td>
-                <td width="85%">
-                    <span data-bind="text: $parent.formatLogName(log)"></span>
-                </td>
-            </tr>
-        </script>
 
         <button id="btnAnalyze" class="btn btn-info btn-med @*disabled*@" data-bind="click: startAnalyzer" title="@Dnn.LocalizeString("btnAnalyze")">
             <span class="glyphicon glyphicon-play"></span>
@@ -58,35 +56,35 @@
     </div>
     }
 
-    @if (Model.ReportedItems != null && Model.ReportedItems.Count > 0)
-    {
-        <div class="dnnFilterSet clearfix">
-            <h3>Results</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <td>Level</td>
-                        <td>Class</td>
-                        <td>Exception</td>
-                        <td>Message</td>
-                        <td>Occurences</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (LogItemCore li in Model.ReportedItems)
-                    {
-                        <tr>
-                            <td>@li.Level</td>
-                            <td>@li.Class</td>
-                            <td>@li.Throwable</td>
-                            <td>@li.Message</td>
-                            <td>@li.Count</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
+    <div class="log-results clearfix" data-bind="visible: analyzedResults().length > 0, afterRender: afterLog">
+        <button id="btnReset" class="btn btn-info btn-med @*disabled*@" data-bind="click: resetAnalyzer" title="@Dnn.LocalizeString("btnReset")">
+            <span class="glyphicon glyphicon-refresh"></span>
+            @Dnn.LocalizeString("btnReset")
+        </button>
+
+        <h3>Results</h3>
+        <table class="table table-responsive table-results">
+            <thead>
+                <tr>
+                    <th style="width:20%">Class</th>
+                    <th style="width:20%">Exception</th>
+                    <th style="width:50%">Message</th>
+                    <th style="text-align:right; width:10%;">Occurences</th>
+                </tr>
+            </thead>
+            <tbody data-bind="template: { name: 'logresult-template', foreach: analyzedResults, afterRender: afterResultRender }">
+            </tbody>
+        </table>
+
+        <script type="text/html" id="logresult-template">
+            <tr data-bind="css: Level.toLowerCase()">
+                <td data-bind="text: Class"></td>
+                <td data-bind="text: Throwable"></td>
+                <td class="log-message"><span data-bind="text: Message"></span></td>
+                <td align="right"><span data-bind="text: Count"></span></td>
+            </tr>
+        </script>
+    </div>
 </div>
 
 <script type="text/javascript">
