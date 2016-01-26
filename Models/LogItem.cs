@@ -1,5 +1,5 @@
 ﻿/*
-' Copyright (c) 2015 DotNetNuclear LLC
+' Copyright (c) 2016 DotNetNuclear LLC
 ' http://www.dotnetnuclear.com
 ' All rights reserved.
 ' 

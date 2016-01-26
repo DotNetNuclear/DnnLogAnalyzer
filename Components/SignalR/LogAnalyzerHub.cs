@@ -1,5 +1,5 @@
 ﻿/*
-' Copyright (c) 2015 DotNetNuclear LLC
+' Copyright (c) 2016 DotNetNuclear LLC
 ' http://www.dotnetnuclear.com
 ' All rights reserved.
 ' 
@@ -34,10 +34,10 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
             var hubContext = GlobalHost.ConnectionManager.GetHubContext<LogAnalyzerHub>();
             hubContext.Clients.All.procStart(taskId, userId);
         }
-        public void NotifyProgress(string taskId, int percentage)
+        public void NotifyProgress(string taskId, int percentage, string errorMsg)
         {
             var hubContext = GlobalHost.ConnectionManager.GetHubContext<LogAnalyzerHub>();
-            hubContext.Clients.All.progress(taskId, percentage);
+            hubContext.Clients.All.progress(taskId, percentage, errorMsg);
         }
         public void NotifyEnd(string taskId)
         {

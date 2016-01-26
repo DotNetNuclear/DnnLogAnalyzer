@@ -24,3 +24,4 @@ table.table-results tr.warn td {background-color:rgba(251, 170, 38, .4); }
 table.table-results tr.info td {background-color:rgba(205, 204, 202, .4); }
 table.table-results tr.debug td {background-color:rgba(255, 255, 255, .4); }
 table.table-results tr td.log-message span { word-break: break-all; }
+.log-message-error {display:none; margin-top: 15px;}

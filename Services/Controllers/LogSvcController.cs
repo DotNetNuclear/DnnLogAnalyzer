@@ -8,12 +8,15 @@ using System.Threading;
 using DotNetNuke.Web.Api;
 using DotNetNuclear.Modules.LogAnalyzer.Components;
 using DotNetNuclear.Modules.LogAnalyzer.Models;
+using DotNetNuclear.Modules.LogAnalyzer.Components.Settings;
 
 namespace DotNetNuclear.Modules.LogAnalyzer.Services.Controllers
 {
     //[baseURL]=/desktopmodules/dotnetnuclear.loganalyzer/api
     public class LogSvcController : DnnApiController
     {
+        ISettingsRepository _settingsRepo;
+
         public LogSvcController()
         {
         }
@@ -28,18 +31,17 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Services.Controllers
         [SupportedModules(FeatureController.DESKTOPMODULE_NAME)]
         public HttpResponseMessage Analyze(LogServiceRequest req)
         {
+            _settingsRepo = new SettingsRepository(ActiveModule.ModuleID);
+
             string taskId = req.taskId;
             string logPath = FileUtils.GetDnnLogPath() + "\\";
             var p = new LogAnalyzerHub();
             p.NotifyStart(taskId);
-            Thread.Sleep(1000);
+            Thread.Sleep(50);
 
             LogViewModel vm = new LogViewModel();
             ILogItemRepository repo = new LogItemRepository();
             long totalLogLines = 0, lineIncrement = 0;
-
-            FilterParams logFilter = new FilterParams();
-            logFilter.Pattern = "HI"; //TODO get setting for regex pattern
 
             repo.DeleteAllItems(ActiveModule.ModuleID);
             foreach (string logFile in req.files)
@@ -50,24 +52,35 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Services.Controllers
 
             IAnalyzerNotifyer progressNotifyer = new AnalyzerNotifyer(totalLogLines, lineIncrement, taskId, p);
 
-            var analyzer = new LogFileParser(progressNotifyer);
-
-            foreach (string logFile in req.files)
+            try
             {
-                var logItems = analyzer.GetEntries(logPath + logFile, "log4net", String.Empty);
-                foreach (var li in logItems)
+                var analyzer = new LogFileParser(progressNotifyer);
+
+                foreach (string logFile in req.files)
                 {
-                    li.ModuleId = ActiveModule.ModuleID;
-                    li.Count = 1;
-                    repo.InsertItem(li);
+                    var logItems = analyzer.GetEntries(logPath + logFile, "log4net", _settingsRepo.LogAnalyzerRegex);
+                    foreach (var li in logItems)
+                    {
+                        li.ModuleId = ActiveModule.ModuleID;
+                        li.Count = 1;
+                        repo.InsertItem(li);
+                    }
                 }
+                // Final piece of work
+                Thread.Sleep(50);
+                vm.ReportedItems = repo.GetRollupItems(ActiveModule.ModuleID).ToList();
+                p.NotifyProgress(taskId, 100, string.Empty);
             }
-            // Final piece of work
-            Thread.Sleep(1000);
-            vm.ReportedItems = repo.GetRollupItems(ActiveModule.ModuleID).ToList();
-            p.NotifyProgress(taskId, 100);
-            Thread.Sleep(2000);
-            p.NotifyEnd(taskId);
+            catch (Exception ex)
+            {
+                p.NotifyProgress(taskId, -1, "An error occurred analyzing the log: " + ex.Message);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+            finally
+            {
+                Thread.Sleep(500);
+                p.NotifyEnd(taskId);
+            }
 
             return Request.CreateResponse(HttpStatusCode.OK, vm);
         }

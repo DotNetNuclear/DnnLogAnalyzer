@@ -50,6 +50,8 @@
         </button>
     </div>
 
+    <div id="loganalyzer-error-@moduleId" class="dnnFormMessage dnnFormValidationSummary log-message-error"></div>
+
     <div id="logAnalyzerProgress" class="progress progress-striped active">
         <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
         </div>
@@ -92,6 +94,7 @@
         var logOptions = {
             "moduleId": @moduleId,
             "logFileList":  @(new HtmlString(Json.Encode(Model.FilesToAnalyze))),
+            "messageContainer": $('#loganalyzer-error-@moduleId')
         };
         dnnuclear.LogAnalyzer.init(logOptions);
     });

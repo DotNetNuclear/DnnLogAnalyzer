@@ -56,11 +56,11 @@
                     <viewOrder>0</viewOrder>
                   </moduleControl>
                   <moduleControl>
-                    <controlKey>QuickSettings</controlKey>
-                    <controlSrc>DotNetNuclear.Modules.LogAnalyzer.Controllers/Settings/Index.mvc</controlSrc>
+                    <controlKey>Settings</controlKey>
+                    <controlSrc>DotNetNuclear.Modules.LogAnalyzer.Controllers/Settings/Settings.mvc</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
                     <controlTitle />
-                    <controlType>View</controlType>
+                    <controlType>Edit</controlType>
                     <iconFile />
                     <helpUrl/>
                     <supportsPopUps>False</supportsPopUps>

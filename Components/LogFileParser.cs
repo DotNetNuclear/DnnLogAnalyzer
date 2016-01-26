@@ -1,5 +1,5 @@
 ﻿/*
-' Copyright (c) 2015 DotNetNuclear LLC
+' Copyright (c) 2016 DotNetNuclear LLC
 ' http://www.dotnetnuclear.com
 ' All rights reserved.
 ' 
@@ -24,7 +24,6 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
     {
         private IAnalyzerNotifyer _progress;
         private const string Separator = "[---]";
-        private const string FileParserRegex = @"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}),(\d{3})(\s)\[(.*?)\]\[(.*?)\]\[(.*?)\](\s)(.*?)\-(\s+)(.*)";
 
         public LogFileParser(IAnalyzerNotifyer notifyer)
         {
@@ -42,8 +41,8 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
             if (String.IsNullOrEmpty(dataSource))
                 throw new ArgumentNullException("dataSource");
 
-            if (String.IsNullOrEmpty(logPattern))
-                logPattern = FileParserRegex;
+            //if (String.IsNullOrEmpty(logPattern))
+            //    logPattern = FileParserRegex;
 
             FileInfo file = new FileInfo(dataSource);
             if (!file.Exists)

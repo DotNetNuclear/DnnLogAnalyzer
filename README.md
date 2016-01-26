@@ -9,3 +9,10 @@ by number of occurrences and severity.  This will allow website administrators v
 <p>The architecture is an MVC DNN 8+ module that uses <a href="http://signalr.net/">SignalR</a> to handle notification to the 
 front end for the long running log analyser process.  It uses <a href="http://knockoutjs.com/">Knockout</a> for the front end 
 ajax services and <a href="http://getbootstrap.com/">Bootstrap</a> for the UI styling.</p>
+
+<h4>Installation Instructions</h4>
+<ul>
+    <li>Install package from the module's /install folder or in the latest module package downloads</li>
+    <li>In IIS, you may need to add a mimetype for .woff2 extension (application/x-font-woff2).</li>
+    <li>(Optional) Copy source code contents over the module path /DesktopModules/MVC/DotNetNuclear/LogAnalyzer</li>
+</ul>

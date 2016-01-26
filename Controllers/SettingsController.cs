@@ -1,5 +1,5 @@
 ﻿/*
-' Copyright (c) 2015 DotNetNuclear LLC
+' Copyright (c) 2016 DotNetNuclear LLC
 ' http://www.dotnetnuclear.com
 ' All rights reserved.
 ' 
@@ -10,47 +10,55 @@
 ' DEALINGS IN THE SOFTWARE.
 ' 
 */
-using System;
 using System.Web.Mvc;
 using DotNetNuke.Collections;
+using DotNetNuke.Web.Mvc.Framework.ActionFilters;
 using DotNetNuke.Web.Mvc.Framework.Controllers;
-
-using DotNetNuclear.Modules.LogAnalyzer.Models;
+using DotNetNuke.Security;
+using DotNetNuclear.Modules.LogAnalyzer.Components.Settings;
 
 namespace DotNetNuclear.Modules.LogAnalyzer.Controllers
 {
     /// <summary>
     /// The Settings Controller manages the modules settings
     /// </summary>
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+    [DnnHandleError]
     public class SettingsController : DnnController
     {
-        /// <summary>
-        /// SettingsController Constructor
-        /// </summary>
-        public SettingsController()
-        {
-        }
+        ISettingsRepository _settingsRepo;
 
         /// <summary>
-        /// The Index action renders the default Settings View
+        /// 
         /// </summary>
         /// <returns></returns>
-        public ActionResult Index()
+        [HttpGet]
+        public ActionResult Settings()
         {
-            var settings = new Settings
+            _settingsRepo = new SettingsRepository(ActiveModule.ModuleID);
+            var settings = new Models.Settings
             {
-                LogAnalyzerRegex = @"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}),(\d{3})(\s)\[(.*?)\]\[(.*?)\]\[(.*?)\](\s)(.*?)\-(\s+)(.*)",
-                ModuleId = base.ActiveModule.ModuleID
+                LogAnalyzerRegex = _settingsRepo.LogAnalyzerRegex
             };
+
             return View(settings);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateInput(false)]
-        [ValidateAntiForgeryToken]
-        public ActionResult Index(FormCollection collection)
+        [DotNetNuke.Web.Mvc.Framework.ActionFilters.ValidateAntiForgeryToken]
+        public ActionResult Settings(Models.Settings settings)
         {
-            return View();
+            _settingsRepo = new SettingsRepository(ActiveModule.ModuleID);
+            _settingsRepo.LogAnalyzerRegex = settings.LogAnalyzerRegex;
+            //ModuleContext.Configuration.ModuleSettings["DNNuclear_LogAnalyzer_ParserRegEx"] = settings.LogAnalyzerRegex;
+
+            return RedirectToDefaultRoute();
         }
     }
 }

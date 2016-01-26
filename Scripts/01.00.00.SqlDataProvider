@@ -16,7 +16,6 @@ GO
 CREATE TABLE {databaseOwner}{objectQualifier}DNNuclear_LogAnalyzer_LogItem(
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[ModuleId] [int] NOT NULL,
-	[Path] [nvarchar](255) NOT NULL,
 	[TimeStamp] [datetime] NULL,
 	[Count] [int] NOT NULL,
 	[Logger] [nvarchar](255) NULL,

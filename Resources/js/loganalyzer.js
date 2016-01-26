@@ -6,8 +6,8 @@
     */
     dnnuclear.LogAnalyzerHub = $.connection.logAnalyzerHub;
     dnnuclear.LogAnalyzerHub.client = {
-        progress: function (procId, i) {
-            dnnuclear.LogAnalyzer.updateProgress(i);
+        progress: function (procId, i, err) {
+            dnnuclear.LogAnalyzer.updateProgress(i, err);
         },
         procStart: function (procId, id) {
             dnnuclear.LogAnalyzer.updateProgress(0);
@@ -28,6 +28,7 @@
     dnnuclear.LogAnalyzerDefOptions = {
         moduleId: -1,
         koContainer: $(".dnnuclear-logAnalyzer:first"),
+        messageContainer: $(".dnnFormMessage:first"),
         progressBarSelector: "#logAnalyzerProgress",
         logFileList: []
     };
@@ -62,8 +63,11 @@
                 dnnuclear.LogAnalyzer.hubInitialized = true;
             });
         },
-        updateProgress: function(val) {
+        updateProgress: function(val, errMsg) {
             var progBar = this.progressBar.find(".progress-bar");
+            if (errMsg && errMsg.length > 0) {
+                $(this.options.messageContainer).text(errMsg).show();
+            }
             if (val >= 0) {
                 progBar.css('width', val + '%').attr('aria-valuenow', val).text(val + '%');
             }

@@ -1,7 +1,6 @@
-﻿/*
+/*
 ' Copyright (c) 2016 DotNetNuclear LLC
-' http://www.dotnetnuclear.com
-' All rights reserved.
+'  All rights reserved.
 ' 
 ' THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
 ' TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
@@ -11,16 +10,16 @@
 ' 
 */
 using System;
-using DotNetNuke.ComponentModel.DataAnnotations;
 
-namespace DotNetNuclear.Modules.LogAnalyzer.Models
+namespace DotNetNuclear.Modules.LogAnalyzer.Components.Settings
 {
-    public class LogItemCore
+    /// <summary>
+    /// Interface for the DNN module settings values
+    /// </summary>
+    public interface ISettingsRepository
     {
-        public string Message { get; set; }
-        public string Throwable { get; set; }
-        public string Class { get; set; }
-        public virtual string Level { get; set; }
-        public int Count { get; set; }
+        /// <summary>
+        /// </summary>
+        string LogAnalyzerRegex { get; set; }
     }
 }
