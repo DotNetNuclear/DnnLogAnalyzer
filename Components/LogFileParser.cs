@@ -120,10 +120,14 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
                     }
                     if (_progress != null) { _progress.UpdateProgress(); }
                 }
-                entry.Logger = loggerName;
-                entry.File = file.Name;
-                entry.Message = msg.ToString();
-                result.Add(entry);
+                // Add last entry
+                if (entry.Id > 0)
+                {
+                    entry.Logger = loggerName;
+                    entry.File = file.Name;
+                    entry.Message = msg.ToString();
+                    result.Add(entry);
+                }
             }
 
             return result;

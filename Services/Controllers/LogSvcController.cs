@@ -22,7 +22,7 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Services.Controllers
         }
 
         /// <summary>
-        /// API that returns Hello world
+        /// API that starts the log analyzer process
         /// </summary>
         /// <returns></returns>
         [HttpPost]  //[baseURL]/logsvc/analyze
@@ -33,6 +33,7 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Services.Controllers
         {
             _settingsRepo = new SettingsRepository(ActiveModule.ModuleID);
 
+            long logItemCount = 0;
             string taskId = req.taskId;
             string logPath = FileUtils.GetDnnLogPath() + "\\";
             var p = new LogAnalyzerHub();
@@ -61,15 +62,24 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Services.Controllers
                     var logItems = analyzer.GetEntries(logPath + logFile, "log4net", _settingsRepo.LogAnalyzerRegex);
                     foreach (var li in logItems)
                     {
+                        logItemCount++;
                         li.ModuleId = ActiveModule.ModuleID;
                         li.Count = 1;
                         repo.InsertItem(li);
                     }
                 }
-                // Final piece of work
-                Thread.Sleep(50);
-                vm.ReportedItems = repo.GetRollupItems(ActiveModule.ModuleID).ToList();
-                p.NotifyProgress(taskId, 100, string.Empty);
+
+                if (logItemCount > 0)
+                {
+                    // Final piece of work
+                    Thread.Sleep(50);
+                    vm.ReportedItems = repo.GetRollupItems(ActiveModule.ModuleID).ToList();
+                    p.NotifyProgress(taskId, 100, string.Empty);
+                }
+                else
+                {
+                    p.NotifyProgress(taskId, -1, "Log files analyzed contain no entries.");
+                }
             }
             catch (Exception ex)
             {

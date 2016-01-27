@@ -73,6 +73,7 @@
             }
         },
         analyzeLogs: function () {
+            $(this.options.messageContainer).hide();
             var req = {
                 "taskId": new Date().getTime().toString(),
                 "files": dnnuclear.LogAnalyzerViewModel.selectedLogs()
@@ -92,6 +93,7 @@
             });
         },
         displayReport: function (data) {
+            $(this.options.messageContainer).hide();
             dnnuclear.LogAnalyzerViewModel.analyzedResults(data);
         }
     };
