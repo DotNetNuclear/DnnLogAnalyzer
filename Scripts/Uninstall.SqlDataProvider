@@ -1,3 +1,8 @@
 ﻿IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'{databaseOwner}[{objectQualifier}LogAnalyzer_Items]') AND type in (N'U'))
-DROP TABLE {databaseOwner}[{objectQualifier}LogAnalyzer_Items]
+	DROP TABLE {databaseOwner}[{objectQualifier}LogAnalyzer_Items]
 GO
+
+IF EXISTS ( SELECT * FROM sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}DNNuclear_LogAnalyzer_RollupLogs]') AND OBJECTPROPERTY(id, N'IsProcedure') = 1 )
+BEGIN
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}DNNuclear_LogAnalyzer_RollupLogs]
+END

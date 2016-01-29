@@ -34,6 +34,12 @@ CREATE TABLE {databaseOwner}{objectQualifier}DNNuclear_LogAnalyzer_LogItem(
 GO
 
 
+IF EXISTS ( SELECT * FROM sysobjects WHERE id = object_id(N'{databaseOwner}[{objectQualifier}DNNuclear_LogAnalyzer_RollupLogs]') AND OBJECTPROPERTY(id, N'IsProcedure') = 1 )
+BEGIN
+    DROP PROCEDURE {databaseOwner}[{objectQualifier}DNNuclear_LogAnalyzer_RollupLogs]
+END
+GO
+
 CREATE PROCEDURE {databaseOwner}{objectQualifier}DNNuclear_LogAnalyzer_RollupLogs
 (
 	@ModuleID int

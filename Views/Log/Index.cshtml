@@ -44,7 +44,7 @@
             </tbody>
         </table>
 
-        <button id="btnAnalyze" class="btn btn-info btn-med @*disabled*@" data-bind="click: startAnalyzer" title="@Dnn.LocalizeString("btnAnalyze")">
+        <button id="btnAnalyze" class="btn btn-info btn-med @*disabled*@" data-bind="click: startAnalyzer, enable: selectedLogs().length > 0" title="@Dnn.LocalizeString("btnAnalyze")">
             <span class="glyphicon glyphicon-play"></span>@Dnn.LocalizeString("btnAnalyze")
         </button>
     </div>

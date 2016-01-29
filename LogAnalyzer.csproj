@@ -88,6 +88,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Resources\img\checkbox_sp.png" />
     <Content Include="Resources\img\extension.png" />
     <Content Include="Resources\js\bootstrap.min.js" />
@@ -200,7 +201,13 @@
     <Content Include="App_LocalResources\Settings.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\fonts\" />
+    <Folder Include="Assemblies\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Resources\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Resources\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Resources\fonts\glyphicons-halflings-regular.woff2" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -239,4 +246,14 @@
   <Import Project="BuildScripts\ModulePackage.Targets" />
   <Target Name="AfterBuild" DependsOnTargets="PackageModule">
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "$(TargetDir)Owin.dll" "$(SolutionDir)Assemblies\Owin.dll"
+copy /Y "$(TargetDir)Microsoft.Owin.dll" "$(SolutionDir)Assemblies\Microsoft.Owin.dll"
+copy /Y "$(TargetDir)Microsoft.Owin.Host.SystemWeb.dll" "$(SolutionDir)Assemblies\Microsoft.Owin.Host.SystemWeb.dll"
+copy /Y "$(TargetDir)Microsoft.Owin.Security.dll" "$(SolutionDir)Assemblies\Microsoft.Owin.Security.dll"
+copy /Y "$(TargetDir)Microsoft.AspNet.SignalR.Core.dll" "$(SolutionDir)Assemblies\Microsoft.AspNet.SignalR.Core.dll"
+copy /Y "$(TargetDir)Microsoft.AspNet.SignalR.SystemWeb.dll" "$(SolutionDir)Assemblies\Microsoft.AspNet.SignalR.SystemWeb.dll"
+
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>

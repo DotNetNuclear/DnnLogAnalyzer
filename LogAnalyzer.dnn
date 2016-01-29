@@ -11,7 +11,7 @@
         <email>support@dotnetnuclear.com</email>
       </owner>
       <license src="license.txt" />
-      <releaseNotes src="releaseNotes.txt" /> 
+      <releaseNotes src="releaseNotes.txt" />
       <azureCompatible>true</azureCompatible>
       <components>
         <component type="Script">
@@ -33,14 +33,10 @@
           <desktopModule>
             <moduleName>DotNetNuclear.LogAnalyzer</moduleName>
             <foldername>DotNetNuclear/LogAnalyzer</foldername>
-            <shareable>Supported</shareable>
             <businessControllerClass>DotNetNuclear.Modules.LogAnalyzer.Components.FeatureController, DotNetNuclear.LogAnalyzer</businessControllerClass>
-            <supportedFeatures>
-              <supportedFeature type="Upgradeable" />
-            </supportedFeatures>
+            <supportedFeatures />
             <moduleDefinitions>
               <moduleDefinition>
-                <definitionName>DotNetNuclear.LogAnalyzer</definitionName>
                 <friendlyName>LogAnalyzer</friendlyName>
                 <defaultCacheTime>0</defaultCacheTime>
                 <moduleControls>
@@ -52,33 +48,22 @@
                     <controlType>View</controlType>
                     <iconFile />
                     <helpUrl />
-                    <supportsPopUps>False</supportsPopUps>
                     <viewOrder>0</viewOrder>
                   </moduleControl>
                   <moduleControl>
                     <controlKey>Settings</controlKey>
                     <controlSrc>DotNetNuclear.Modules.LogAnalyzer.Controllers/Settings/Settings.mvc</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle />
+                    <controlTitle>Log Analyzer Settings</controlTitle>
                     <controlType>Edit</controlType>
                     <iconFile />
                     <helpUrl/>
-                    <supportsPopUps>False</supportsPopUps>
                     <viewOrder>0</viewOrder>
                   </moduleControl>
                 </moduleControls>
               </moduleDefinition>
             </moduleDefinitions>
           </desktopModule>
-          <eventMessage>
-            <processorType>DotNetNuke.Entities.Modules.EventMessageProcessor, DotNetNuke</processorType>
-            <processorCommand>UpgradeModule</processorCommand>
-            <attributes>
-              <businessControllerClass>DotNetNuclear.Modules.LogAnalyzer.Components.FeatureController</businessControllerClass>
-              <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
-              <upgradeVersionsList>01.00.00</upgradeVersionsList>
-            </attributes>
-          </eventMessage>
         </component>
         <component type="ResourceFile">
           <resourceFiles>
@@ -87,6 +72,38 @@
               <name>Resources.zip</name>
             </resourceFile>
           </resourceFiles>
+        </component>
+        <component type="Assembly">
+          <assemblies>
+            <assembly>
+              <name>DotNetNuclear.LogAnalyzer.dll</name>
+              <sourceFileName>bin\DotNetNuclear.LogAnalyzer.dll</sourceFileName>
+            </assembly>
+            <assembly>
+              <name>Owin.dll</name>
+              <sourceFileName>bin\Owin.dll</sourceFileName>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Owin.dll</name>
+              <sourceFileName>bin\Microsoft.Owin.dll</sourceFileName>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Owin.Host.SystemWeb.dll</name>
+              <sourceFileName>bin\Microsoft.Owin.Host.SystemWeb.dll</sourceFileName>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Owin.Security.dll</name>
+              <sourceFileName>bin\Microsoft.Owin.Security.dll</sourceFileName>
+            </assembly>
+            <assembly>
+              <name>Microsoft.AspNet.SignalR.Core.dll</name>
+              <sourceFileName>bin\Microsoft.AspNet.SignalR.Core.dll</sourceFileName>
+            </assembly>
+            <assembly>
+              <name>Microsoft.AspNet.SignalR.SystemWeb.dll</name>
+              <sourceFileName>bin\Microsoft.AspNet.SignalR.SystemWeb.dll</sourceFileName>
+            </assembly>
+          </assemblies>
         </component>
       </components>
     </package>
