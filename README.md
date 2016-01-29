@@ -18,4 +18,4 @@ ajax services and <a href="http://getbootstrap.com/">Bootstrap</a> for the UI st
 </ul>
 
 <h4>Overview Video</h4>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/bc3R9u4VyTg" frameborder="0" allowfullscreen></iframe>
+[![ScreenShot](https://github.com/DotNetNuclear/DnnLogAnalyzer/blob/master/Resources/img/video_thumb.jpg)](https://www.youtube.com/embed/bc3R9u4VyTg)

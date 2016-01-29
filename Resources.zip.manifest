@@ -22,7 +22,15 @@
     </file>
     <file>
       <path>Resources/css/</path>
+      <name>bootstrap.min.css</name>
+    </file>
+    <file>
+      <path>Resources/css/</path>
       <name>module.css</name>
+    </file>
+    <file>
+      <path>Resources/js/</path>
+      <name>bootstrap.min.js</name>
     </file>
     <file>
       <path>Resources/js/</path>
@@ -35,6 +43,10 @@
     <file>
       <path>Resources/js/</path>
       <name>loganalyzer.js</name>
+    </file>
+    <file>
+      <path>Resources/js/</path>
+      <name>readmore.min.js</name>
     </file>
     <file>
       <path>Resources/js/</path>
