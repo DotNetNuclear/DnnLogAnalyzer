@@ -25,3 +25,15 @@ table.table-results tr.info td {background-color:rgba(205, 204, 202, .4); }
 table.table-results tr.debug td {background-color:rgba(255, 255, 255, .4); }
 table.table-results tr td.log-message span { word-break: break-all; }
 .log-message-error {display:none; margin-top: 15px;}
+.log-results {margin-top: 15px;}
+.log-results .panel { margin-bottom: 10px; }
+.log-results .panel > .panel-heading.fatal { background-image: none; background-color: #620505; color: white; }
+.log-results .panel > .panel-heading.fatal a, .log-results .panel > .panel-heading.fatal a:hover {color: white; }
+.log-results .panel > .panel-heading.error { background-image: none; background-color: #f60a0a; color: white; }
+.log-results .panel > .panel-heading.error a, .log-results .panel > .panel-heading.error a:hover {color: white; }
+.log-results .panel > .panel-heading.warn { background-image: none; background-color: #e1bd13; color: #000000; }
+.log-results .panel > .panel-heading.info { background-image: none; color: #000000; }
+.log-results .panel > .panel-heading.debug { background-image: none; background-color: #66b430; color: #000000; }
+.log-results .panel > .panel-heading.warn a, .log-results .panel > .panel-heading.warn a:hover,
+    .log-results .panel > .panel-heading.info a, .log-results .panel > .panel-heading.info a:hover,
+    .log-results .panel > .panel-heading.debug a, .log-results .panel > .panel-heading.debug a:hover {color: #000000; }

@@ -108,6 +108,12 @@
         formatLogName: function(logFile) {
             return logFile.Name + " (" + logFile.FileSize + ")";
         },
+        formatLevelHref: function (level) {
+            return '#collapse_' + level.toLowerCase();
+        },
+        formatLevelId: function (level) {
+            return 'collapse_' + level.toLowerCase();
+        },
         startAnalyzer: function () {
             dnnuclear.LogAnalyzer.analyzeLogs();
         },
@@ -129,6 +135,10 @@
                 speed: 125,
                 collapsedHeight: 80
             });
+
+            // collapse all groups except the first
+            $(elem).find('.accordion-body').removeClass('in').attr('aria-expanded', 'false');
+            $(elem).parent().find('.accordion-group:first .accordion-body').addClass('in').attr('aria-expanded', 'true');
         }
     };
 

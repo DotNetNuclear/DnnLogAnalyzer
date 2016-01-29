@@ -38,7 +38,6 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Services.Controllers
             string logPath = FileUtils.GetDnnLogPath() + "\\";
             var p = new LogAnalyzerHub();
             p.NotifyStart(taskId);
-            Thread.Sleep(50);
 
             LogViewModel vm = new LogViewModel();
             ILogItemRepository repo = new LogItemRepository();
@@ -71,9 +70,14 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Services.Controllers
 
                 if (logItemCount > 0)
                 {
-                    // Final piece of work
-                    Thread.Sleep(50);
-                    vm.ReportedItems = repo.GetRollupItems(ActiveModule.ModuleID).ToList();
+                    // Rollup results and produce report object
+                    var reportItems = repo.GetRollupItems(ActiveModule.ModuleID).ToList();
+                    vm.ReportedItems = reportItems.GroupBy(r => r.Level, r => r,
+                               (key, g) => new LogItemCollection {
+                                    Level = key,
+                                    Items = g.Take(100).ToList()
+                                }
+                            ).ToList();
                     p.NotifyProgress(taskId, 100, string.Empty);
                 }
                 else
@@ -88,7 +92,6 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Services.Controllers
             }
             finally
             {
-                Thread.Sleep(500);
                 p.NotifyEnd(taskId);
             }
 

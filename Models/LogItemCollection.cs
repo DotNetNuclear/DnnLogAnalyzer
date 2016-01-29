@@ -1,4 +1,4 @@
-﻿/*
+/*
 ' Copyright (c) 2016 DotNetNuclear LLC
 ' http://www.dotnetnuclear.com
 ' All rights reserved.
@@ -12,14 +12,12 @@
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using DotNetNuclear.Modules.LogAnalyzer.Components;
 
 namespace DotNetNuclear.Modules.LogAnalyzer.Models
 {
-    public class LogViewModel
+    public class LogItemCollection
     {
-        public List<FileListItem> FilesToAnalyze { get; set; }
-        public List<LogItemCollection> ReportedItems { get; set; }
+        public string Level { get; set; }
+        public List<LogItemCore> Items { get; set; }
     }
 }

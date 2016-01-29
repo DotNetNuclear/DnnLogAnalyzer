@@ -33,7 +33,7 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
         {
             _progressLOCK = new object();
             ProgressTotalCount = total;
-            ProgressIncrement = increment;
+            ProgressIncrement = (increment > 0 ? increment : 1);
             CurrentHubTaskId = taskId;
             _LogSignalRHub = hub;
             _progressCurrent = 0;

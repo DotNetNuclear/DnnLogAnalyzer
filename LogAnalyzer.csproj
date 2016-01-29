@@ -58,6 +58,7 @@
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Models\FileListItem.cs" />
     <Compile Include="Models\FilterParams.cs" />
+    <Compile Include="Models\LogItemCollection.cs" />
     <Compile Include="Models\LogItemCore.cs" />
     <Compile Include="Models\LogViewModel.cs" />
     <Compile Include="Models\LogItem.cs" />

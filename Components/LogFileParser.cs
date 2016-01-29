@@ -53,6 +53,7 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
             using (StreamReader reader = file.OpenText())
             {
                 string line;
+                string[] errorLevels = { "FATAL", "ERROR", "WARN" };
                 int logNum = 0;
                 int classColonIdx;
                 bool firstMatch = false;
@@ -63,7 +64,7 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
                 while ((line = reader.ReadLine()) != null)
                 {
                     _progress.IncrementCurrentProgress();
-                    string message;
+                    string message, level;
                     Regex matchLineRegEx = new Regex(logPattern);
                     Match m = matchLineRegEx.Match(line);
                     if (m.Success)
@@ -78,23 +79,32 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Components
                         }
                         msg.Clear();
                         logNum++;
-                        foundThrowable = false;
                         firstMatch = true;
+                        foundThrowable = false;
                         DateTime logDate = DateTime.Parse(m.Groups[1].Value); // matches '2008-01-17 20:10:54'
                         logDate = logDate.AddMilliseconds(Convert.ToDouble(m.Groups[2].Value)); // the third group is the milliseconds from the date
+                        level = m.Groups[6].Value.Trim();
                         entry.Id = logNum;
                         entry.TimeStamp = logDate;
                         entry.MachineName = m.Groups[4].Value.Trim();
                         entry.Thread = m.Groups[5].Value.Trim();
-                        entry.Level = m.Groups[6].Value.Trim();
+                        entry.Level = level;
                         entry.Class = m.Groups[8].Value.Trim();
                         message = m.Groups[10].Value.Trim();
-                        classColonIdx = message.IndexOf(':');
-                        if (classColonIdx > 0)
+                        if (errorLevels.Any(level.Contains))
+                        {
+                            classColonIdx = message.IndexOf(':');
+                            if (classColonIdx > 0)
+                            {
+                                foundThrowable = true;
+                                entry.Throwable = message.Substring(0, classColonIdx).Trim();
+                                msg.Append(message.Substring(classColonIdx + 1).Trim());
+                            }
+                        }
+                        else
                         {
                             foundThrowable = true;
-                            entry.Throwable = message.Substring(0, classColonIdx).Trim();
-                            msg.Append(message.Substring(classColonIdx + 1).Trim());
+                            msg.Append(message);
                         }
                     }
                     else

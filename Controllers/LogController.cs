@@ -26,8 +26,6 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Controllers
 {
     public class LogController : DnnController
     {
-        //private const string _Log4NetPattern = "%date [%property{log4net:HostName}][Thread:%thread][%level] %logger - %message%newline";
-
         /// <summary>
         /// </summary>
         public LogController()
@@ -52,10 +50,14 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Controllers
                     System.IO.FileInfo f = new System.IO.FileInfo(s);
                     if (f.FullName.EndsWith(".log.resources"))
                     {
-                        vm.FilesToAnalyze.Add(new FileListItem {
-                            FileSize = FileUtils.FormatFileSize((double)f.Length),
-                            Name = f.Name
-                        });
+                        if (f.Length > 0)
+                        {
+                            vm.FilesToAnalyze.Add(new FileListItem
+                            {
+                                FileSize = FileUtils.FormatFileSize((double)f.Length),
+                                Name = f.Name
+                            });
+                        }
                     }
                 }
             }
@@ -65,37 +67,6 @@ namespace DotNetNuclear.Modules.LogAnalyzer.Controllers
             }
             return View(vm);
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="collection"></param>
-        /// <returns></returns>
-        //[HttpPost]
-        //[ValidateInput(false)]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Index(FormCollection collection)
-        //{
-        //    int moduleId = ModuleContext.ModuleId;
-        //    LogViewModel vm = new LogViewModel();
-        //    string logFile = collection["dnnuclear$fileSelector"];
-        //    var analyzer = new FileEntriesProvider();
-        //    FilterParams logFilter = new FilterParams();
-        //    logFilter.Pattern = _Log4NetPattern;
-
-        //    ILogItemRepository repo = new LogItemRepository();
-        //    var logItems = analyzer.GetEntries(logFile, logFilter);
-
-        //    repo.DeleteAllItems(moduleId);
-        //    foreach(var li in logItems)
-        //    {
-        //        li.ModuleId = moduleId;
-        //        li.Count = 1;
-        //        repo.InsertItem(li);
-        //    }
-        //    vm.ReportedItems = repo.GetRollupItems(moduleId).ToList();
-        //    return View(vm);
-        //}
 
     }
 }
