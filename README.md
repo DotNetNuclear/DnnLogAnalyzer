@@ -12,7 +12,7 @@ ajax services and <a href="http://getbootstrap.com/">Bootstrap</a> for the UI st
 
 <h4>Installation Instructions</h4>
 <ul>
-    <li>Install package from the module's /install folder or in the latest module package downloads</li>
+    <li>Install the latest <a href="https://github.com/DotNetNuclear/DnnLogAnalyzer/releases">release</a> by downloading and installing the package in your DNN 8 environment.</li>
     <li>In IIS, you may need to add a mimetype for .woff2 extension (application/x-font-woff2).</li>
-    <li>(Optional) Copy source code contents over the module path /DesktopModules/MVC/DotNetNuclear/LogAnalyzer</li>
+    <li>(Optional) Copy source code contents over the module path /DesktopModules/MVC/DotNetNuclear/LogAnalyzer.</li>
 </ul>
